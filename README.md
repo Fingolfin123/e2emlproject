@@ -16,7 +16,7 @@
 <!-- 4. Push ReadM.md to Source -->
 >> git branch -M main
 >> git remote add origin https://github.com/Fingolfin123/e2emlproject.git
->> git config --global user.name "Ben Gislason"
->> git config --global user.email bengisla123@gmail.com
 
 >> git push -u origin main
+
+<!-- 5. Create src folder and setup/requirements files -->
