@@ -19,4 +19,11 @@
 
 >> git push -u origin main
 
-<!-- 5. Create src folder and setup/requirements files -->
+<!-- 5. Create src folder and pyproject.toml -->
+
+<!-- 6. Create conda venv -->
+conda create -n yourenv pip
+conda activate yourenv/
+
+<!-- 7. Install env package -->
+pip install -e . --timeout 100 <!-- extend timeout to avoid network issues>
