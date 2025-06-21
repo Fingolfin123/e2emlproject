@@ -17,7 +17,9 @@ dependencies = [
     "seaborn",
     "scikit-learn",
     "catboost",
-    "xgboost"
+    "xgboost",
+    "dill"
+    "joblib"
 ]
 
 [tool.setuptools.packages.find]

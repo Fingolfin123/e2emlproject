@@ -10,7 +10,7 @@ def error_msg_detail(error,error_detail:sys):
     error_msg=f"The error occured in python script [{file_name}] line number [{line_num}] error message[{error}]"
     return error_msg
 
-class CustomeException(Exception):
+class CustomException(Exception):
     def __init__(self,error_msg,error_detail:sys):
         super().__init__(error_msg)
         self.error_msg=error_msg_detail(error=error_msg,error_detail=error_detail)
