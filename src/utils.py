@@ -3,8 +3,8 @@ import sys
 import dill
 import joblib
 
-from src.logger import logging
 from src.exception import CustomException
+from src.logger import logging
 
 def save_object(file_path, unique_name, obj):
     try:
