@@ -28,7 +28,7 @@ from src.components.data_transformation import DataTransformation
 class ModelTrainerConfig:
     # Define the root path name to the model object
     # NOTE: This path is modified with each model/targetfeature tested
-    trainer_model_file_path=os.path.join('artifact',"model.pk")
+    trainer_model_file_path=os.path.join('artifacts',"model.joblib")
     # Define a dictionary of model options to test
     models = {
         "Random Forest": RandomForestRegressor(),
@@ -182,4 +182,4 @@ class ModelTrainer:
         
 if __name__=="__main__":
     obj=ModelTrainer()
-    obj.evaluate_features('math_score')
+    obj.evaluate_features('writing_score')

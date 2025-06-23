@@ -18,8 +18,9 @@ dependencies = [
     "scikit-learn",
     "catboost",
     "xgboost",
-    "dill"
-    "joblib"
+    "dill",
+    "joblib",
+    "flask"
 ]
 
 [tool.setuptools.packages.find]
