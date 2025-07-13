@@ -86,7 +86,6 @@ class ModelTrainer:
     def evaluate_features(self, target_feature_name:"EvaluateAllNumericFeatures"):
         data_transformer_obj = self.model_trainer_config.data_transformer
         if target_feature_name=="EvaluateAllNumericFeatures":
-            # NOTE: PIPELINE FEATURE START
             # Load Raw data and extract all numerical features
             df_raw,df_train,df_test = data_transformer_obj.get_ingest_data()
             categorical_features, numeric_features = data_transformer_obj.split_features(df_raw)
@@ -98,10 +97,6 @@ class ModelTrainer:
             # Load Raw data and extract all numerical features
             train_arr,test_arr,pre_proc_obj_path = data_transformer_obj.initiate_data_transformation(target_feature_name)
             self.initiate_model_trainer(train_arr,test_arr,target_feature_name)
-        
-        
-        # target_feature_name = numeric_features[0]
-        # NOTE: PIPELINE FEATURE END
         
 
     def evaluate_models(self,X_train,y_train,X_test,y_test,models):
@@ -182,4 +177,4 @@ class ModelTrainer:
         
 if __name__=="__main__":
     obj=ModelTrainer()
-    obj.evaluate_features('writing_score')
+    obj.evaluate_features('math_score')

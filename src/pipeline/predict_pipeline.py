@@ -12,15 +12,14 @@ class PredictPipeline:
 
     def predict(self,features, target_feature_name):
         try:
-            trainer_model_file_path='artificats\model.joblib'
-            pre_proc_obj_path='artificats\pre_proc.joblib'
-            
-            
+            trainer_model_file_path='artifacts\model_Linear Regression.joblib'
+            pre_proc_obj_path='artifacts\pre_proc.joblib'
             model=load_object(file_path=trainer_model_file_path, unique_name=target_feature_name)
             preprocessor=load_object(file_path=pre_proc_obj_path, unique_name=target_feature_name)
             data_scaled=preprocessor.transform(features)
             prediction=model.predict(data_scaled)
-
+            print(prediction)
+            
             return prediction
         
         except Exception as e:
@@ -33,7 +32,7 @@ class CustomData:
         race_ethnicity: str,
         parental_level_of_education: str,
         lunch: str,
-        test_preapartion_course: str,
+        test_preparation_course: str,
         reading_score: int,
         writing_score: int
         ):
@@ -41,7 +40,7 @@ class CustomData:
         self.race_ethnicity=race_ethnicity
         self.parental_level_of_education=parental_level_of_education
         self.lunch=lunch
-        self.test_preapartion_course=test_preapartion_course
+        self.test_preparation_course=test_preparation_course
         self.reading_score=reading_score
         self.writing_score=writing_score
 
@@ -52,7 +51,7 @@ class CustomData:
                 "race_ethnicity": [self.race_ethnicity],
                 "parental_level_of_education": [self.parental_level_of_education],
                 "lunch": [self.lunch],
-                "test_preapartion_course": [self.test_preapartion_course],
+                "test_preparation_course": [self.test_preparation_course],
                 "reading_score": [self.reading_score],
                 "writing_score": [self.writing_score],                
             }

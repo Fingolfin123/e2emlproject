@@ -24,7 +24,7 @@ def predict_datapoint():
             race_ethnicity=request.form.get('race_ethnicity'),
             parental_level_of_education=request.form.get('parental_level_of_education'),
             lunch=request.form.get('lunch'),
-            test_preapartion_course=request.form.get('test_preapartion_course'),
+            test_preparation_course=request.form.get('test_preparation_course'),
             reading_score=request.form.get('reading_score'),
             writing_score=request.form.get('writing_score'),
         )

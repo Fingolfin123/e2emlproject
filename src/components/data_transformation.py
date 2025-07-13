@@ -140,4 +140,4 @@ class DataTransformation:
 
 if __name__=="__main__":
     obj=DataTransformation()
-    obj.initiate_data_transformation('reading_score')
+    obj.initiate_data_transformation('math_score')

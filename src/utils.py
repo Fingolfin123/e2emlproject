@@ -27,7 +27,7 @@ def save_object(file_path, unique_name, obj):
     except Exception as e:
         raise CustomException(e, sys)
     
-def load_object(file_path, unique_name, obj):
+def load_object(file_path, unique_name):
     try:
         logging.info('Loading Processing Object')
         dir_path = os.path.dirname(file_path)
@@ -36,6 +36,7 @@ def load_object(file_path, unique_name, obj):
         base, ext = os.path.splitext(os.path.basename(file_path))
         modified_filename = f"{base}_{unique_name}{ext}"
         modified_path = os.path.join(dir_path, modified_filename)
+        print(modified_path)
 
         if os.path.isdir(dir_path):
             # Use joblib if it's a .joblib file, otherwise use dill
@@ -44,6 +45,7 @@ def load_object(file_path, unique_name, obj):
             else:
                 with open(modified_path, "rb") as file_obj:
                     obj = dill.load(file_obj)
+        return obj
 
     except Exception as e:
         raise CustomException(e, sys)
