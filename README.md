@@ -25,5 +25,5 @@
 conda create -n yourenv pip
 conda activate yourenv/
 
-<!-- 7. Install env package -->
+<!-- 7. Install env package --> 
 pip install -e . --timeout 100 <!-- extend timeout to avoid network issues>

@@ -27,7 +27,7 @@ from src.components.data_transformation import DataTransformation
 @dataclass
 class ModelTrainerConfig:
     # Define the root path name to the model object
-    # NOTE: This path is modified with each model/targetfeature tested
+    # NOTE: This path is modified with each model/target feature tested
     trainer_model_file_path=os.path.join('artifacts',"model.joblib")
     # Define a dictionary of model options to test
     models = {
@@ -83,7 +83,7 @@ class ModelTrainer:
 
         return X,y
 
-    def evaluate_features(self, target_feature_name:"EvaluateAllNumericFeatures"):
+    def evaluate_features(self, target_feature_name="EvaluateAllNumericFeatures"):
         data_transformer_obj = self.model_trainer_config.data_transformer
         if target_feature_name=="EvaluateAllNumericFeatures":
             # Load Raw data and extract all numerical features
@@ -92,13 +92,14 @@ class ModelTrainer:
             # Iterate through all numerical features and perform model evalulation for each
             for target_feature in numeric_features:
                 train_arr,test_arr,pre_proc_obj_path = data_transformer_obj.initiate_data_transformation(target_feature)
-                self.initiate_model_trainer(train_arr,test_arr,target_feature)
+                smodel_report = self.initiate_model_trainer(train_arr,test_arr,target_feature)
         else:
             # Load Raw data and extract all numerical features
             train_arr,test_arr,pre_proc_obj_path = data_transformer_obj.initiate_data_transformation(target_feature_name)
-            self.initiate_model_trainer(train_arr,test_arr,target_feature_name)
+            model_report = self.initiate_model_trainer(train_arr,test_arr,target_feature_name)
         
-
+        return model_report
+                 
     def evaluate_models(self,X_train,y_train,X_test,y_test,models):
         try:
             report = {}
@@ -137,8 +138,8 @@ class ModelTrainer:
 
                 report[name] = test_model_score
                 logging.info(f"Model {name} has a test R2 score of {test_model_score}")
-
-            return report
+                results = dict(sorted(report.items(), key=lambda item: item[1], reverse=True))
+            return results
 
         except Exception as e:
             raise CustomException(e,sys)
@@ -172,6 +173,8 @@ class ModelTrainer:
                 unique_name=best_model_name+"_"+target_feature_name,
                 obj=best_model,
             )
+            return model_report
+        
         except Exception as e:
             raise CustomException(e,sys)
         

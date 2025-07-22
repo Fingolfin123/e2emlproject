@@ -24,28 +24,17 @@ class DataTransformation:
     def __init__(self):
         self.transformation_config=DataTransformConfig()
         self.data_ingestion=DataIngestion()
+
+    def get_raw_features(self):
+        df_raw, df_train, df_test = self.data_ingestion.get_ingest_data()
+        categorical_features, numerical_features = self.split_features(df_raw)
+
+        # Add suffixes for dropdown display
+        feature_options = [f"{f} (categorical)" for f in categorical_features] + \
+                        [f"{f} (numerical)" for f in numerical_features]
         
+        return feature_options
     
-    def get_ingest_data(self):
-        # NOTE: PIPELINE FEATURE START
-        # if (
-        #     not os.path.exists(self.data_ingestion.ingestion_config.raw_data_path) or
-        #     not os.path.exists(self.data_ingestion.ingestion_config.train_data_path) or
-        #     not os.path.exists(self.data_ingestion.ingestion_config.test_data_path)
-        #     ):
-        #     print("Raw, Training or Test set not found, regenerating from input source.")
-        #     data_ingestor = DataIngestion()
-        #     data_ingestor.initiate_data_ingestion()
-        # NOTE: PIPELINE FEATURE END
-        data_ingestor = DataIngestion()
-        data_ingestor.initiate_data_ingestion()        
-            
-        df_raw = pd.read_csv(self.data_ingestion.ingestion_config.raw_data_path)
-        df_train = pd.read_csv(self.data_ingestion.ingestion_config.train_data_path)
-        df_test = pd.read_csv(self.data_ingestion.ingestion_config.test_data_path)
-
-        return df_raw,df_train,df_test
-
     def combine_input_target_arrays(self,input_array,target_array):
         combined_array = np.c_[
             input_array, np.array(target_array)
@@ -106,7 +95,8 @@ class DataTransformation:
         logging.info('Transforming Model Input')
         try:
             # Get ingestion data
-            df_raw,df_train,df_test = self.get_ingest_data()
+            data_ingestor = DataIngestion()
+            df_raw,df_train,df_test = data_ingestor.get_ingest_data()
 
             # Separate input matrix and predicted output vector
             X_train,y_train = self.split_input_X_and_target_y(df_train, target_feature_name)
@@ -137,6 +127,8 @@ class DataTransformation:
         
         except Exception as e:
             raise CustomException(e,sys)
+
+
 
 if __name__=="__main__":
     obj=DataTransformation()

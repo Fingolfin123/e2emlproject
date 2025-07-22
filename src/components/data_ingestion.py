@@ -46,7 +46,16 @@ class DataIngestion:
             )
         except Exception as e:
             raise CustomException(e,sys)
+    
+    def get_ingest_data(self):
+        self.initiate_data_ingestion()        
+        
+        df_raw = pd.read_csv(self.ingestion_config.raw_data_path)
+        df_train = pd.read_csv(self.ingestion_config.train_data_path)
+        df_test = pd.read_csv(self.ingestion_config.test_data_path)
 
+        return df_raw,df_train,df_test
+    
 if __name__=="__main__":
     obj=DataIngestion()
     obj.initiate_data_ingestion()

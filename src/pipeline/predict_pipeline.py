@@ -7,25 +7,23 @@ from src.utils import load_object
 
 
 class PredictPipeline:
-    def __init__(self):
-        pass
+    def __init__(self, trainer_model_file_path: str, pre_proc_obj_path: str):
+        self.trainer_model_file_path=trainer_model_file_path
+        self.pre_proc_obj_path=pre_proc_obj_path
 
     def predict(self,features, target_feature_name):
         try:
-            trainer_model_file_path='artifacts\model_Linear Regression.joblib'
-            pre_proc_obj_path='artifacts\pre_proc.joblib'
-            model=load_object(file_path=trainer_model_file_path, unique_name=target_feature_name)
-            preprocessor=load_object(file_path=pre_proc_obj_path, unique_name=target_feature_name)
+            model=load_object(file_path=self.trainer_model_file_path, unique_name=target_feature_name)
+            preprocessor=load_object(file_path=self.pre_proc_obj_path, unique_name=target_feature_name)
             data_scaled=preprocessor.transform(features)
             prediction=model.predict(data_scaled)
-            print(prediction)
             
             return prediction
         
         except Exception as e:
             CustomException(e,sys)
 
-class CustomData:
+class PredictionSelectionData:
     def __init__(
         self,
         gender: str,

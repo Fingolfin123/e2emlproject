@@ -1,25 +1,65 @@
-from flask import Flask,request,render_template
-import numpy as np
-import pandas as pd
+from flask import Flask, request, render_template
+import os
+from src.utils import GetProcessorObj
+from src.pipeline.model_handler import ModelRunHandle
+from src.components.data_transformation import DataTransformation
+from src.pipeline.predict_pipeline import PredictionSelectionData, PredictPipeline
+from src.pipeline.training_pipeline import TrainingPipeline
 
-from sklearn.preprocessing import StandardScaler
-from src.pipeline.predict_pipeline import CustomData, PredictPipeline
-
-application=Flask(__name__)
-app=application
-
-## Route for a home page
+app = Flask(__name__)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/predictdata',methods=['GET','POST'])
-def predict_datapoint():
-    if request.method=='GET':
-        return render_template('home.html')
+
+@app.route('/train-data', methods=['GET', 'POST'])
+def training_datapoint():
+    # NOTE: FUTURE PIPELINE UPGRADE --> feature_options should only need to be saved once so 
+    # get_raw_features should not be called multiple times
+    # Get available features to add as options to html drop down selector
+    data_transformation=DataTransformation()
+    feature_options = data_transformation.get_raw_features()
+    if request.method == 'GET':
+        # Add available features to html drop down selections
+        return render_template("train.html", features=feature_options)
+
     else:
-        data=CustomData(
+        # Get selected feature from html drop down selection
+        selected_feature = request.form.get('features')
+        print(f"the selected feature is: {selected_feature}")
+        selected_feature = selected_feature.replace(" (numerical)", "").replace(" (categorical)", "")
+
+        # Create training model using the selected feature
+        # NOTE: Selected training model is from best performing model in model evalutaion 'results'
+        training_pipeline = TrainingPipeline()
+        results = training_pipeline.training(selected_feature)
+        print(f"the results are: {results}")
+
+        return render_template("train.html", features=feature_options, results=results)
+
+
+@app.route('/predict-data', methods=['GET', 'POST'])
+def predict_datapoint():
+    # NOTE: FUTURE PIPELINE UPGRADE --> need to know which model to use in predictions
+    # currently have to hardcode "target_feature_name"
+    model_path = os.path.join('artifacts', 'model_Linear Regression.joblib')
+    preproc_path = os.path.join('artifacts', 'pre_proc.joblib')
+    print(f"the model_path is: {model_path}")
+    print(f"the preproc_path is: {preproc_path}")
+    predict_pipeline = PredictPipeline(model_path, preproc_path)
+
+    if request.method == 'GET':
+        # Load preprocessor and get options
+        pre_processor_obj = GetProcessorObj(
+            proc_obj_path=preproc_path,
+            target_feature_name="math_score"
+        )
+        print(pre_processor_obj.feature_options)
+        return render_template("predict.html", options=pre_processor_obj.feature_options)
+
+    else:
+        data = PredictionSelectionData(
             gender=request.form.get('gender'),
             race_ethnicity=request.form.get('race_ethnicity'),
             parental_level_of_education=request.form.get('parental_level_of_education'),
@@ -29,14 +69,16 @@ def predict_datapoint():
             writing_score=request.form.get('writing_score'),
         )
 
-        pred_df=data.get_data_as_data_frame()
-        print(pred_df)
+        pred_df = data.get_data_as_data_frame()
+        print(f"the selected features are: {pred_df}")
+        results = predict_pipeline.predict(pred_df, 'math_score')
+        print(f"the prediction is: {results}")
+        pre_processor_obj = GetProcessorObj(
+            proc_obj_path=preproc_path,
+            target_feature_name="math_score"
+        )        
+        return render_template('predict.html', options=pre_processor_obj.feature_options, results=results[0])
 
-        predict_pipeline=PredictPipeline()
-        results=predict_pipeline.predict(pred_df,'math_score')
 
-        return render_template('home.html',results=results[0])
-    
-
-if __name__=="__main__":
-    app.run(host="0.0.0.0",debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)
