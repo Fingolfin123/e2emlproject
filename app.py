@@ -45,8 +45,6 @@ def predict_datapoint():
     # currently have to hardcode "target_feature_name"
     model_path = os.path.join('artifacts', 'model_Linear Regression.joblib')
     preproc_path = os.path.join('artifacts', 'pre_proc.joblib')
-    print(f"the model_path is: {model_path}")
-    print(f"the preproc_path is: {preproc_path}")
     predict_pipeline = PredictPipeline(model_path, preproc_path)
 
     if request.method == 'GET':
@@ -55,7 +53,6 @@ def predict_datapoint():
             proc_obj_path=preproc_path,
             target_feature_name="math_score"
         )
-        print(pre_processor_obj.feature_options)
         return render_template("predict.html", options=pre_processor_obj.feature_options)
 
     else:

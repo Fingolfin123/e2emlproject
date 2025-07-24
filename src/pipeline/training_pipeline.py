@@ -14,14 +14,7 @@ class TrainingPipeline:
     def training(self,feature):
         try:
             obj=ModelTrainer()
-            training_report = obj.evaluate_features(feature)            
-            # trainer_model_file_path='artifacts\model_Linear Regression.joblib'
-            # pre_proc_obj_path='artifacts\pre_proc.joblib'
-            # model=load_object(file_path=trainer_model_file_path, unique_name=target_feature_name)
-            # preprocessor=load_object(file_path=pre_proc_obj_path, unique_name=target_feature_name)
-            # data_scaled=preprocessor.transform(features)
-            # prediction=model.predict(data_scaled)
-            # print(prediction)
+            training_report = obj.evaluate_features(feature)
             
             return training_report
         
